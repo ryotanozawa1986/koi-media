@@ -1,0 +1,47 @@
+---
+import { articlesWithTag, collectTags, getPublishedArticles } from '../../../../lib/articles';
+import { paginate, totalPagesOf } from '../../../../lib/pagination';
+import { tagPath } from '../../../../lib/paths';
+import { collectionLd } from '../../../../lib/seo';
+import { site } from '../../../../config/site';
+import TaxonomyLayout from '../../../../components/TaxonomyLayout.astro';
+
+export async function getStaticPaths() {
+  const articles = await getPublishedArticles();
+  const paths = [];
+  for (const tag of collectTags(articles)) {
+    const total = totalPagesOf(articlesWithTag(articles, tag).length, site.postsPerPage);
+    for (let page = 2; page <= total; page += 1) {
+      paths.push({ params: { tag, page: String(page) } });
+    }
+  }
+  return paths;
+}
+
+const tag = Astro.params.tag;
+const page = Number(Astro.params.page);
+if (!tag || !Number.isInteger(page) || page < 2) throw new Error('タグのページ指定が不正です');
+const articles = articlesWithTag(await getPublishedArticles(), tag);
+const listed = paginate(articles, page, site.postsPerPage);
+if (listed.page !== page) throw new Error(`タグ ${tag} に ${page} ページ目はありません`);
+const title = `「${tag}」の記事`;
+const description = `「${tag}」のタグが付いた、恋愛と占いの記事一覧です。`;
+const path = tagPath(tag);
+const crumbs = [
+  { name: 'ホーム', href: '/' },
+  { name: `「${tag}」`, href: path },
+];
+---
+
+<TaxonomyLayout
+  title={title}
+  description={description}
+  crumbs={crumbs}
+  eyebrow="タグ"
+  articles={listed.items}
+  page={listed.page}
+  totalPages={listed.totalPages}
+  basePath={path}
+  emptyMessage="このタグの記事はありません。"
+  jsonLd={[collectionLd(`「${tag}」の記事（${page}ページ目）`, description, `${path}page/${page}/`)]}
+/>

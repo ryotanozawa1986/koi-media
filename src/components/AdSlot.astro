@@ -1,0 +1,8 @@
+---
+interface Props {
+  /** 後から広告タグを入れる識別子。子要素が空のあいだは表示しない。 */
+  name: string;
+}
+const { name } = Astro.props;
+---
+<div class="ad-slot" data-ad-slot={name}></div>

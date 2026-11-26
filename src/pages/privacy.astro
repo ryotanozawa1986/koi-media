@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { webPageLd } from '../lib/seo';
+
+const title = 'プライバシーポリシー';
+const description = 'koi-mediaのプライバシーポリシーです。アクセス時の情報、Cookie、広告枠、お問い合わせの扱いを説明します。';
+const crumbs = [
+  { name: 'ホーム', href: '/' },
+  { name: title, href: '/privacy/' },
+];
+---
+
+<BaseLayout title={title} description={description} jsonLd={[webPageLd(title, description, '/privacy/')]}>
+  <div class="wrap static-copy">
+    <Breadcrumbs items={crumbs} />
+    <header class="page-hero">
+      <p class="eyebrow">ポリシー</p>
+      <h1>{title}</h1>
+      <p class="lead">この文章は公開前のプレースホルダです。本番のURLと計測の有無が決まったら、このページを差し替えます。</p>
+    </header>
+    <h2>アクセス時の情報</h2>
+    <p>
+      ページを表示したとき、サーバーや配信網のログに、IPアドレス、ブラウザの種類、閲覧したURL、参照元が記録されることがあります。これらは、障害の調査と不正アクセスの防止に使います。
+    </p>
+    <h2>Cookie と広告</h2>
+    <p>
+      現在、行動ターゲティング広告は設置していません。記事ページと一覧には、広告を後から入れるための空の枠だけがあります。広告を配信する場合は、このページに事業者名とCookieの目的を追記します。
+    </p>
+    <h2>お問い合わせ</h2>
+    <p>
+      問い合わせ窓口のメールアドレスは、サイトの公開URLが決まったあとに<a href="/contact/">お問い合わせ</a>へ記載します。届いた内容は、返信と記録のために必要な範囲で保持します。
+    </p>
+    <h2>改定</h2>
+    <p>このポリシーを変えたときは、このページの文章を更新します。</p>
+  </div>
+</BaseLayout>

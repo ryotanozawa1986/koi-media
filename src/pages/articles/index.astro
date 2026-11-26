@@ -1,0 +1,29 @@
+---
+import { getPublishedArticles } from '../../lib/articles';
+import { paginate } from '../../lib/pagination';
+import { collectionLd } from '../../lib/seo';
+import { site } from '../../config/site';
+import TaxonomyLayout from '../../components/TaxonomyLayout.astro';
+
+const articles = await getPublishedArticles();
+const listed = paginate(articles, 1, site.postsPerPage);
+const title = '新着記事';
+const description = 'koi-mediaに新しく公開した、恋愛と占いの解説記事です。';
+const crumbs = [
+  { name: 'ホーム', href: '/' },
+  { name: title, href: '/articles/' },
+];
+---
+
+<TaxonomyLayout
+  title={title}
+  description={description}
+  crumbs={crumbs}
+  eyebrow="新着"
+  articles={listed.items}
+  page={1}
+  totalPages={listed.totalPages}
+  basePath="/articles"
+  emptyMessage="公開中の記事はまだありません。"
+  jsonLd={[collectionLd(title, description, '/articles/')]}
+/>

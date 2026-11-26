@@ -1,0 +1,41 @@
+---
+import { rokuseiTypes } from '../../data/result-types';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { getCategory } from '../../lib/categories';
+import { categoryPath, rokuseiPath } from '../../lib/paths';
+import { webPageLd } from '../../lib/seo';
+
+export function getStaticPaths() {
+  return rokuseiTypes
+    .filter((entry) => entry.published && entry.summary.trim() && entry.paragraphs.length > 0)
+    .map((entry) => ({ params: { type: entry.id } }));
+}
+
+const typeId = Astro.params.type;
+const entry = rokuseiTypes.find((item) => item.id === typeId && item.published);
+if (!entry) throw new Error(`六星占術のタイプページが見つかりません: ${typeId}`);
+
+const category = getCategory('rokusei-senjutsu');
+const path = rokuseiPath(entry.id);
+const crumbs = [
+  { name: 'ホーム', href: '/' },
+  { name: category.name, href: categoryPath(category.id) },
+  { name: entry.name, href: path },
+];
+---
+
+<BaseLayout title={entry.name} description={entry.summary} jsonLd={[webPageLd(entry.name, entry.summary, path)]}>
+  <div class="wrap static-copy">
+    <Breadcrumbs items={crumbs} />
+    <header class="page-hero">
+      <p class="eyebrow">{category.name}</p>
+      <h1>{entry.name}</h1>
+      <p class="lead">{entry.summary}</p>
+    </header>
+    {entry.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+    <p>
+      <a href={categoryPath(category.id)}>六星占術のガイドへ戻る</a>
+    </p>
+  </div>
+</BaseLayout>

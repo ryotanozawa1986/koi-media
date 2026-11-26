@@ -1,0 +1,38 @@
+---
+import { articlesWithTag, collectTags, getPublishedArticles } from '../../../lib/articles';
+import { paginate } from '../../../lib/pagination';
+import { tagPath } from '../../../lib/paths';
+import { collectionLd } from '../../../lib/seo';
+import { site } from '../../../config/site';
+import TaxonomyLayout from '../../../components/TaxonomyLayout.astro';
+
+export async function getStaticPaths() {
+  const articles = await getPublishedArticles();
+  return collectTags(articles).map((tag) => ({ params: { tag } }));
+}
+
+const tag = Astro.params.tag;
+if (!tag) throw new Error('tag がありません');
+const articles = articlesWithTag(await getPublishedArticles(), tag);
+const listed = paginate(articles, 1, site.postsPerPage);
+const title = `「${tag}」の記事`;
+const description = `「${tag}」のタグが付いた、恋愛と占いの記事一覧です。`;
+const path = tagPath(tag);
+const crumbs = [
+  { name: 'ホーム', href: '/' },
+  { name: `「${tag}」`, href: path },
+];
+---
+
+<TaxonomyLayout
+  title={title}
+  description={description}
+  crumbs={crumbs}
+  eyebrow="タグ"
+  articles={listed.items}
+  page={1}
+  totalPages={listed.totalPages}
+  basePath={path}
+  emptyMessage="このタグの記事はありません。"
+  jsonLd={[collectionLd(`「${tag}」の記事`, description, path)]}
+/>

@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { site } from '../config/site';
+import { webPageLd } from '../lib/seo';
+
+const title = '編集部';
+const description = 'koi-media編集部の方針です。恋愛と占いを、占術ごとに分け、断定しない解説として公開しています。';
+const crumbs = [
+  { name: 'ホーム', href: '/' },
+  { name: title, href: '/about/' },
+];
+---
+
+<BaseLayout title={title} description={description} jsonLd={[webPageLd(title, description, '/about/')]}>
+  <div class="wrap static-copy">
+    <Breadcrumbs items={crumbs} />
+    <header class="page-hero">
+      <p class="eyebrow">編集部</p>
+      <h1>{site.editorName}</h1>
+      <p class="lead">{description}</p>
+    </header>
+    <h2>このメディアについて</h2>
+    <p>
+      {site.name}は、恋愛と占いを一つの読み物として届けるウェブメディアです。四柱推命、六星占術、九星気学、星座占い、タロット、数秘術、動物占い、血液型を、それぞれ独立したカテゴリに分けています。
+    </p>
+    <h2>編集方針</h2>
+    <ul>
+      <li>占術の用語は、その占術のページで意味が分かるように書く。</li>
+      <li>相性や将来を、一つの答えに断定しない。</li>
+      <li>記事の末尾に、参照した出典を置く。</li>
+      <li>血液型と性格のように、科学的な根拠がない話は、娯楽・文化として区別する。</li>
+      <li>医療、法律、お金の判断につながる書き方はしない。</li>
+    </ul>
+    <h2>占いの扱い</h2>
+    <p>
+      掲載している占いは娯楽です。生まれた日から気質や時期の「語られ方」を知るためのもので、交際するかどうかを決める根拠にはしません。個人の鑑定結果そのものは、記事には書きません。
+    </p>
+    <p>
+      ご連絡は<a href="/contact/">お問い合わせ</a>へ。データの扱いは<a href="/privacy/">プライバシーポリシー</a>にまとめています。
+    </p>
+  </div>
+</BaseLayout>

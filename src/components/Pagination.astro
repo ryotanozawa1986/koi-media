@@ -1,0 +1,39 @@
+---
+import { hrefForPage } from '../lib/paths';
+
+interface Props {
+  page: number;
+  totalPages: number;
+  basePath: string;
+}
+const { page, totalPages, basePath } = Astro.props;
+const numbers = Array.from({ length: totalPages }, (_, index) => index + 1);
+---
+
+{
+  totalPages > 1 && (
+    <nav class="pager" aria-label="ページ">
+      {page > 1 ? (
+        <a href={hrefForPage(basePath, page - 1)} rel="prev">
+          前へ
+        </a>
+      ) : (
+        <span class="pager-gap" />
+      )}
+      {numbers.map((number) =>
+        number === page ? (
+          <span aria-current="page">{number}</span>
+        ) : (
+          <a href={hrefForPage(basePath, number)}>{number}</a>
+        ),
+      )}
+      {page < totalPages ? (
+        <a href={hrefForPage(basePath, page + 1)} rel="next">
+          次へ
+        </a>
+      ) : (
+        <span class="pager-gap" />
+      )}
+    </nav>
+  )
+}

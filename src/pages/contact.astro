@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { webPageLd } from '../lib/seo';
+
+const title = 'お問い合わせ';
+const description = 'koi-mediaへのお問い合わせページです。連絡先は、公開URLが決まり次第ここに記載します。';
+const crumbs = [
+  { name: 'ホーム', href: '/' },
+  { name: title, href: '/contact/' },
+];
+---
+
+<BaseLayout title={title} description={description} jsonLd={[webPageLd(title, description, '/contact/')]}>
+  <div class="wrap static-copy">
+    <Breadcrumbs items={crumbs} />
+    <header class="page-hero">
+      <p class="eyebrow">コンタクト</p>
+      <h1>{title}</h1>
+      <p class="lead">掲載内容についての連絡窓口です。連絡先のメールアドレスは、サイトのURLが決まったあとに、このページへ記載します。</p>
+    </header>
+    <h2>受け付ける内容</h2>
+    <ul>
+      <li>記事の誤り、出典の不備についての指摘</li>
+      <li>プライバシーに関する問い合わせ</li>
+      <li>メディア掲載や広告枠についての連絡</li>
+    </ul>
+    <h2>受け付けない内容</h2>
+    <p>
+      個人の鑑定依頼、交際の判断、医療・法律・お金の相談には答えられません。占いの記事は娯楽であり、個別の運勢をこの窓口で出すことはありません。
+    </p>
+    <p>
+      編集方針は<a href="/about/">編集部</a>、データの扱いは<a href="/privacy/">プライバシーポリシー</a>を見てください。
+    </p>
+  </div>
+</BaseLayout>

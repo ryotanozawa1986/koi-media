@@ -1,0 +1,35 @@
+---
+import type { Article } from '../lib/articles';
+import { isSampleArticle } from '../lib/articles';
+import { getCategory } from '../lib/categories';
+import { formatDate, isoDate } from '../lib/format';
+import { articlePath } from '../lib/paths';
+
+interface Props {
+  article: Article;
+  heading?: 'h2' | 'h3';
+}
+const { article, heading = 'h3' } = Astro.props;
+const Tag = heading;
+const category = getCategory(article.data.category);
+---
+
+<a class="card" href={articlePath(article.id)}>
+  <span class="card-media">
+    <img
+      src={article.data.thumbnail}
+      width="1200"
+      height="630"
+      alt={article.data.thumbnailAlt}
+      loading="lazy"
+      decoding="async"
+    />
+    {isSampleArticle(article.id) && <span class="badge">サンプル</span>}
+  </span>
+  <span class="card-body">
+    <span class="eyebrow">{category.name}</span>
+    <Tag class="clamp-2">{article.data.title}</Tag>
+    <p class="dek clamp-2">{article.data.description}</p>
+    <time datetime={isoDate(article.data.publishedAt)}>{formatDate(article.data.publishedAt)}</time>
+  </span>
+</a>

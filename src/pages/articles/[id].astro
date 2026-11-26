@@ -1,0 +1,150 @@
+---
+import { render } from 'astro:content';
+import { getRelated, getPublishedArticles, isSampleArticle, pickRanking } from '../../lib/articles';
+import { getCategory } from '../../lib/categories';
+import { site } from '../../config/site';
+import { formatDate, isoDate } from '../../lib/format';
+import { articlePath, categoryPath } from '../../lib/paths';
+import { articleLd, faqLd } from '../../lib/seo';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import FaqList from '../../components/FaqList.astro';
+import RelatedArticles from '../../components/RelatedArticles.astro';
+import ShareButtons from '../../components/ShareButtons.astro';
+import Toc from '../../components/Toc.astro';
+import { categories } from '../../data/categories';
+
+export async function getStaticPaths() {
+  const articles = await getPublishedArticles();
+  return articles.map((article) => ({ params: { id: article.id } }));
+}
+
+const { id } = Astro.params;
+const articles = await getPublishedArticles();
+const article = articles.find((entry) => entry.id === id);
+if (!article) throw new Error(`記事が見つかりません: ${id}`);
+
+const category = getCategory(article.data.category);
+const { Content, headings } = await render(article);
+const related = getRelated(article, articles);
+const ranking = pickRanking(articles).filter((entry) => entry.id !== article.id).slice(0, 5);
+const path = articlePath(article.id);
+const crumbs = [
+  { name: 'ホーム', href: '/' },
+  { name: category.name, href: categoryPath(category.id) },
+  { name: article.data.title, href: path },
+];
+const faq = article.data.faq ?? [];
+const jsonLd = [articleLd(article, category.name)];
+if (faq.length > 0) jsonLd.push(faqLd(faq));
+const updated = article.data.updatedAt;
+const showUpdated = updated && updated.getTime() !== article.data.publishedAt.getTime();
+---
+
+<BaseLayout
+  title={article.data.title}
+  description={article.data.description}
+  image={article.data.thumbnail}
+  imageAlt={article.data.thumbnailAlt}
+  ogType="article"
+  publishedAt={article.data.publishedAt}
+  updatedAt={updated}
+  section={category.name}
+  tags={article.data.tags}
+  jsonLd={jsonLd}
+>
+  <div class="wrap with-side">
+    <article>
+      <Breadcrumbs items={crumbs} />
+      {
+        isSampleArticle(article.id) && (
+          <p class="sample-banner">これは動作確認用のサンプル記事です。個人の鑑定ではなく、削除して差し替えられます。</p>
+        )
+      }
+      <header class="article-head">
+        <p class="eyebrow">
+          <a href={categoryPath(category.id)}>{category.name}</a>
+        </p>
+        <h1>{article.data.title}</h1>
+        <p class="dek">{article.data.description}</p>
+        <p class="meta">
+          <time datetime={isoDate(article.data.publishedAt)}>公開 {formatDate(article.data.publishedAt)}</time>
+          {showUpdated && updated && (
+            <time datetime={isoDate(updated)}>更新 {formatDate(updated)}</time>
+          )}
+          <a href="/about/">{site.editorName}</a>
+        </p>
+      </header>
+      <figure class="article-figure">
+        <img
+          src={article.data.thumbnail}
+          width="1200"
+          height="630"
+          alt={article.data.thumbnailAlt}
+          fetchpriority="high"
+          decoding="async"
+        />
+      </figure>
+      <AdSlot name="article-top" />
+      <Toc headings={headings} />
+      <div class="prose">
+        <Content />
+      </div>
+      <FaqList items={faq} />
+      {
+        article.data.sources.length > 0 && (
+          <section class="sources">
+            <h2>出典・参考</h2>
+            <ol>
+              {article.data.sources.map((source) => (
+                <li>
+                  <a href={source.url} rel="noopener noreferrer">
+                    {source.title}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </section>
+        )
+      }
+      <ShareButtons title={article.data.title} path={path} />
+      <AdSlot name="article-bottom" />
+      <RelatedArticles articles={related} />
+    </article>
+    <aside class="side-sticky">
+      <AdSlot name="article-sidebar" />
+      {
+        ranking.length > 0 && (
+          <div class="side-block">
+            <p class="side-label">人気の記事</p>
+            <ol class="side-rank">
+              {ranking.map((entry) => (
+                <li>
+                  <a href={articlePath(entry.id)}>
+                    {entry.data.title}
+                    <span>{getCategory(entry.data.category).name}</span>
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </div>
+        )
+      }
+      <div class="side-block">
+        <p class="side-label">占術</p>
+        <ul class="side-links">
+          {
+            categories.map((item) => (
+              <li>
+                <a href={categoryPath(item.id)} aria-current={item.id === category.id ? 'page' : undefined}>
+                  {item.name}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </aside>
+  </div>
+</BaseLayout>
