@@ -1,0 +1,140 @@
+---
+import { categories } from '../data/categories';
+import {
+  articlesInCategory,
+  getPublishedArticles,
+  isSampleArticle,
+  pickFeatured,
+  pickRanking,
+} from '../lib/articles';
+import { getCategory } from '../lib/categories';
+import { formatDate, isoDate } from '../lib/format';
+import { articlePath, categoryPath } from '../lib/paths';
+import { itemListLd, websiteLd } from '../lib/seo';
+import { site } from '../config/site';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+
+const articles = await getPublishedArticles();
+const featured = pickFeatured(articles);
+const ranking = pickRanking(articles);
+const latest = articles.filter((article) => article.id !== featured?.id).slice(0, 6);
+const featuredCategory = featured ? getCategory(featured.data.category) : undefined;
+---
+
+<BaseLayout
+  title={site.name}
+  description={site.description}
+  image={featured?.data.thumbnail}
+  imageAlt={featured?.data.thumbnailAlt}
+  jsonLd={[websiteLd(), itemListLd(articles, articlePath)]}
+>
+  <div class="wrap">
+    {
+      featured && featuredCategory ? (
+        <a class="hero" href={articlePath(featured.id)}>
+          <span class="hero-media">
+            <img
+              src={featured.data.thumbnail}
+              width="1200"
+              height="630"
+              alt={featured.data.thumbnailAlt}
+              fetchpriority="high"
+              decoding="async"
+            />
+            {isSampleArticle(featured.id) && <span class="badge">サンプル</span>}
+          </span>
+          <span>
+            <p class="eyebrow">{featuredCategory.name}</p>
+            <h1>{featured.data.title}</h1>
+            <p class="dek">{featured.data.description}</p>
+            <p class="meta">
+              <time datetime={isoDate(featured.data.publishedAt)}>{formatDate(featured.data.publishedAt)}</time>
+              <span class="more-label">続きを読む</span>
+            </p>
+          </span>
+        </a>
+      ) : (
+        <header class="page-hero">
+          <p class="eyebrow">{site.tagline}</p>
+          <h1>恋愛と占いを、占術ごとに読む。</h1>
+          <p class="lead">公開中の記事はまだありません。</p>
+        </header>
+      )
+    }
+
+    {
+      ranking.length > 0 && (
+        <section class="section" aria-labelledby="ranking-heading">
+          <div class="section-head">
+            <h2 id="ranking-heading">人気の記事</h2>
+            <p>編集部が付けた順位です。</p>
+          </div>
+          <div class="rank-list">
+            {ranking.map((article, index) => {
+              const category = getCategory(article.data.category);
+              return (
+                <a class="rank-card" href={articlePath(article.id)}>
+                  <span class="rank-media">
+                    <img
+                      src={article.data.thumbnail}
+                      width="1200"
+                      height="630"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </span>
+                  <span class="rank-body">
+                    <span class="rank-kicker">
+                      <span class="rank-no">{String(index + 1).padStart(2, '0')}</span>
+                      <span class="eyebrow">{category.name}</span>
+                    </span>
+                    <span class="rank-title clamp-2">{article.data.title}</span>
+                  </span>
+                </a>
+              );
+            })}
+          </div>
+        </section>
+      )
+    }
+
+    {
+      latest.length > 0 && (
+        <section class="section" aria-labelledby="latest-heading">
+          <div class="section-head">
+            <h2 id="latest-heading">新着</h2>
+            <a href="/articles/">新着一覧</a>
+          </div>
+          <div class="card-grid cols-3">
+            {latest.map((article) => (
+              <ArticleCard article={article} />
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    <section class="section" aria-labelledby="category-heading">
+      <div class="section-head">
+        <h2 id="category-heading">占術から読む</h2>
+      </div>
+      <div class="panel-grid">
+        {
+          categories.map((category) => {
+            const newest = articlesInCategory(articles, category.id)[0];
+            return (
+              <a class="panel" href={categoryPath(category.id)}>
+                <h3>{category.name}</h3>
+                <p class="lead clamp-3">{category.lead}</p>
+                {newest && <p class="latest clamp-2">{newest.data.title}</p>}
+                <span class="more">解説を見る</span>
+              </a>
+            );
+          })
+        }
+      </div>
+    </section>
+  </div>
+</BaseLayout>

@@ -1,0 +1,45 @@
+---
+import { categories } from '../data/categories';
+import { categoryPath } from '../lib/paths';
+
+const path = Astro.url.pathname;
+const isArticles = path === '/articles/' || path.startsWith('/articles/page/');
+const isShindan = path.startsWith('/shindan/');
+const isAbout = path.startsWith('/about/');
+---
+
+<header class="site-header">
+  <div class="wrap header-top">
+    <a class="logo" href="/">
+      <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true">
+        <path fill="#9c4d5c" d="M16 3.5 18.4 12.2 27.2 16 18.4 19.8 16 28.5 13.6 19.8 4.8 16 13.6 12.2Z"></path>
+      </svg>
+      <span>
+        <span class="logo-name">koi-media</span>
+        <span class="logo-tag">恋愛×占い</span>
+      </span>
+    </a>
+    <nav class="util-nav" aria-label="サイト">
+      <a href="/articles/" aria-current={isArticles ? 'page' : undefined}>新着</a>
+      <a href="/shindan/" aria-current={isShindan ? 'page' : undefined}>診断</a>
+      <a href="/about/" aria-current={isAbout ? 'page' : undefined}>編集部</a>
+    </nav>
+  </div>
+  <div class="cat-scroll">
+    <div class="wrap">
+      <nav class="cat-nav" aria-label="占術">
+        {
+          categories.map((category) => {
+            const href = categoryPath(category.id);
+            const current = path.startsWith(href);
+            return (
+              <a href={href} aria-current={current ? 'page' : undefined}>
+                {category.name}
+              </a>
+            );
+          })
+        }
+      </nav>
+    </div>
+  </div>
+</header>

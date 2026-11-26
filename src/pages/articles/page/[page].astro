@@ -1,0 +1,44 @@
+---
+import { getPublishedArticles } from '../../../lib/articles';
+import { paginate, totalPagesOf } from '../../../lib/pagination';
+import { collectionLd } from '../../../lib/seo';
+import { site } from '../../../config/site';
+import TaxonomyLayout from '../../../components/TaxonomyLayout.astro';
+
+export async function getStaticPaths() {
+  const articles = await getPublishedArticles();
+  const total = totalPagesOf(articles.length, site.postsPerPage);
+  return Array.from({ length: Math.max(0, total - 1) }, (_, index) => ({
+    params: { page: String(index + 2) },
+  }));
+}
+
+const page = Number(Astro.params.page);
+if (!Number.isInteger(page) || page < 2) {
+  throw new Error(`不正なページ番号です: ${Astro.params.page}`);
+}
+const articles = await getPublishedArticles();
+const listed = paginate(articles, page, site.postsPerPage);
+if (listed.page !== page) {
+  throw new Error(`新着一覧に ${page} ページ目はありません`);
+}
+const title = '新着記事';
+const description = 'koi-mediaに新しく公開した、恋愛と占いの解説記事です。';
+const crumbs = [
+  { name: 'ホーム', href: '/' },
+  { name: title, href: '/articles/' },
+];
+---
+
+<TaxonomyLayout
+  title={title}
+  description={description}
+  crumbs={crumbs}
+  eyebrow="新着"
+  articles={listed.items}
+  page={listed.page}
+  totalPages={listed.totalPages}
+  basePath="/articles"
+  emptyMessage="公開中の記事はまだありません。"
+  jsonLd={[collectionLd(`${title}（${page}ページ目）`, description, `/articles/page/${page}/`)]}
+/>

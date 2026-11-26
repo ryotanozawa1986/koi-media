@@ -1,0 +1,44 @@
+---
+import { categories } from '../data/categories';
+import { site } from '../config/site';
+import { categoryPath } from '../lib/paths';
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div>
+      <p class="footer-name">{site.name}</p>
+      <p class="footer-tag">{site.tagline}</p>
+      <p class="disclaimer">
+        占いの記事は娯楽です。医療、法律、お金の判断には使わないでください。血液型と性格の関係は、科学的な事実として扱っていません。
+      </p>
+    </div>
+    <div>
+      <h2>占術</h2>
+      <ul>
+        {
+          categories.map((category) => (
+            <li>
+              <a href={categoryPath(category.id)}>{category.name}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <div>
+      <h2>メディア</h2>
+      <ul>
+        <li><a href="/articles/">新着記事</a></li>
+        <li><a href="/shindan/">診断</a></li>
+        <li><a href="/about/">編集部</a></li>
+        <li><a href="/contact/">お問い合わせ</a></li>
+        <li><a href="/privacy/">プライバシーポリシー</a></li>
+        <li><a href="/rss.xml">RSS</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap footer-base">
+    <p class="copyright">© {year} {site.name}</p>
+  </div>
+</footer>

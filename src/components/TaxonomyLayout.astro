@@ -1,0 +1,110 @@
+---
+import type { Article } from '../lib/articles';
+import type { Crumb } from '../lib/paths';
+import { categories } from '../data/categories';
+import { categoryPath, hrefForPage } from '../lib/paths';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AdSlot from './AdSlot.astro';
+import ArticleCard from './ArticleCard.astro';
+import Breadcrumbs from './Breadcrumbs.astro';
+import Pagination from './Pagination.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  crumbs: Crumb[];
+  eyebrow?: string;
+  paragraphs?: string[];
+  pillar?: { href: string; label: string } | null;
+  articles: Article[];
+  page: number;
+  totalPages: number;
+  basePath: string;
+  emptyMessage: string;
+  jsonLd?: Record<string, unknown>[];
+  currentCategoryId?: string;
+}
+
+const {
+  title,
+  description,
+  crumbs,
+  eyebrow,
+  paragraphs = [],
+  pillar = null,
+  articles,
+  page,
+  totalPages,
+  basePath,
+  emptyMessage,
+  jsonLd = [],
+  currentCategoryId,
+} = Astro.props;
+
+const pageTitle = page > 1 ? `${title}（${page}ページ目）` : title;
+const pageDescription = page > 1 ? `${description}（${page}ページ目）` : description;
+const prev = page > 1 ? hrefForPage(basePath, page - 1) : undefined;
+const next = page < totalPages ? hrefForPage(basePath, page + 1) : undefined;
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} prev={prev} next={next} jsonLd={jsonLd}>
+  <div class="wrap with-side">
+    <div>
+      <Breadcrumbs items={crumbs} />
+      <header class="page-hero">
+        {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+        <h1>{title}</h1>
+      </header>
+      {
+        paragraphs.length > 0 && (
+          <div class="pillar">
+            {paragraphs.map((paragraph) => (
+              <p>{paragraph}</p>
+            ))}
+            {pillar && (
+              <p>
+                <a class="pillar-link" href={pillar.href}>
+                  基本から読む：{pillar.label}
+                </a>
+              </p>
+            )}
+          </div>
+        )
+      }
+      <AdSlot name="list-top" />
+      {paragraphs.length > 0 && <h2 class="list-label">{title}の記事</h2>}
+      {
+        articles.length > 0 ? (
+          <div class="card-grid">
+            {articles.map((article) => (
+              <ArticleCard article={article} />
+            ))}
+          </div>
+        ) : (
+          <p class="empty">{emptyMessage}</p>
+        )
+      }
+      <Pagination page={page} totalPages={totalPages} basePath={basePath} />
+    </div>
+    <aside class="side-sticky">
+      <AdSlot name="list-sidebar" />
+      <div class="side-block">
+        <p class="side-label">占術</p>
+        <ul class="side-links">
+          {
+            categories.map((category) => (
+              <li>
+                <a
+                  href={categoryPath(category.id)}
+                  aria-current={category.id === currentCategoryId ? 'page' : undefined}
+                >
+                  {category.name}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </aside>
+  </div>
+</BaseLayout>

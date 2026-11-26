@@ -1,0 +1,41 @@
+---
+import { kyuseiStars } from '../../data/result-types';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { getCategory } from '../../lib/categories';
+import { categoryPath, kyuseiPath } from '../../lib/paths';
+import { webPageLd } from '../../lib/seo';
+
+export function getStaticPaths() {
+  return kyuseiStars
+    .filter((entry) => entry.published && entry.summary.trim() && entry.paragraphs.length > 0)
+    .map((entry) => ({ params: { star: entry.id } }));
+}
+
+const starId = Astro.params.star;
+const entry = kyuseiStars.find((item) => item.id === starId && item.published);
+if (!entry) throw new Error(`九星気学の星ページが見つかりません: ${starId}`);
+
+const category = getCategory('kyusei-kigaku');
+const path = kyuseiPath(entry.id);
+const crumbs = [
+  { name: 'ホーム', href: '/' },
+  { name: category.name, href: categoryPath(category.id) },
+  { name: entry.name, href: path },
+];
+---
+
+<BaseLayout title={entry.name} description={entry.summary} jsonLd={[webPageLd(entry.name, entry.summary, path)]}>
+  <div class="wrap static-copy">
+    <Breadcrumbs items={crumbs} />
+    <header class="page-hero">
+      <p class="eyebrow">{category.name}</p>
+      <h1>{entry.name}</h1>
+      <p class="lead">{entry.summary}</p>
+    </header>
+    {entry.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+    <p>
+      <a href={categoryPath(category.id)}>九星気学のガイドへ戻る</a>
+    </p>
+  </div>
+</BaseLayout>

@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ShindanTool from '../../components/shindan/ShindanTool.astro';
+import { categoryPath } from '../../lib/paths';
+import { webPageLd } from '../../lib/seo';
+
+const title = '恋愛診断・相性診断';
+const description =
+  '出生日から四柱推命、六星占術、九星気学の型と相性を読む診断を準備しています。結果の解説は占術ごとのページに分けて公開します。';
+const crumbs = [
+  { name: 'ホーム', href: '/' },
+  { name: '診断', href: '/shindan/' },
+];
+---
+
+<BaseLayout title={title} description={description} jsonLd={[webPageLd(title, description, '/shindan/')]}>
+  <div class="wrap">
+    <Breadcrumbs items={crumbs} />
+    <header class="page-hero">
+      <p class="eyebrow">診断</p>
+      <h1>{title}</h1>
+      <p class="lead">{description}</p>
+    </header>
+    <div class="tool-grid">
+      <section class="tool-card">
+        <p class="soon">準備中</p>
+        <h2>恋愛診断</h2>
+        <p>一人の生年月日から、恋での気質と動きやすい時期の型を出します。</p>
+      </section>
+      <section class="tool-card">
+        <p class="soon">準備中</p>
+        <h2>相性診断</h2>
+        <p>二人の生年月日から、間合いが合いやすい点と、すれ違いやすい点を分けて出します。</p>
+      </section>
+      <section class="tool-card">
+        <p class="soon">解説ページ</p>
+        <h2>型ごとの記事</h2>
+        <p>六星は /rokusei/タイプid/、九星は /kyusei/星のid/ に、静的な解説ページを追加できます。</p>
+      </section>
+    </div>
+    <ShindanTool />
+    <p class="note">
+      診断の前提になる読み方は、
+      <a href={categoryPath('shichu-suimei')}>四柱推命</a>、
+      <a href={categoryPath('rokusei-senjutsu')}>六星占術</a>、
+      <a href={categoryPath('kyusei-kigaku')}>九星気学</a>
+      のガイドにまとめています。結果は娯楽であり、交際の判断には使いません。
+    </p>
+  </div>
+</BaseLayout>

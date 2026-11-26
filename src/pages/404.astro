@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { categories } from '../data/categories';
+import { categoryPath } from '../lib/paths';
+
+const title = 'ページが見つかりません';
+const description = 'お探しのページは移動したか、まだ公開されていません。';
+---
+
+<BaseLayout title={title} description={description} noindex>
+  <div class="wrap static-copy">
+    <header class="page-hero">
+      <p class="eyebrow">404</p>
+      <h1>{title}</h1>
+      <p class="lead">{description}</p>
+    </header>
+    <p><a href="/">トップへ戻る</a></p>
+    <h2>占術から探す</h2>
+    <ul>
+      {categories.map((category) => (
+        <li>
+          <a href={categoryPath(category.id)}>{category.name}</a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</BaseLayout>

@@ -1,0 +1,32 @@
+---
+/**
+ * 診断ツールの置き場。
+ * 生年月日を受け取るUIを足すときは、このコンポーネントを client:visible の島にする。
+ * 計算は src/lib/divination.ts の純関数に置き、結果の詳しい解説は
+ * /rokusei/<id>/ と /kyusei/<id>/ の静的ページに書く。
+ */
+import { kyuseiStars, rokuseiTypes } from '../../lib/divination';
+---
+
+<section class="section" aria-labelledby="shindan-flow">
+  <div class="section-head">
+    <h2 id="shindan-flow">診断の流れ</h2>
+  </div>
+  <ol class="steps">
+    <li class="step">
+      <b>01</b>
+      生年月日を入れる。相性診断では、二人分を入れます。
+    </li>
+    <li class="step">
+      <b>02</b>
+      四柱推命、六星占術、九星気学の型を出します。
+    </li>
+    <li class="step">
+      <b>03</b>
+      型ごとの解説ページで、恋愛の傾向を読みます。
+    </li>
+  </ol>
+  <p class="note">
+    六星占術は{rokuseiTypes.length}タイプ、九星気学は{kyuseiStars.length}星を、解説ページの単位にしています。ツールの入力画面は、この場所に後から載せます。
+  </p>
+</section>

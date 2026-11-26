@@ -1,0 +1,54 @@
+---
+import { categories } from '../../../../data/categories';
+import { articlesInCategory, getPublishedArticles } from '../../../../lib/articles';
+import { getCategory } from '../../../../lib/categories';
+import { paginate, totalPagesOf } from '../../../../lib/pagination';
+import { articlePath, categoryPath } from '../../../../lib/paths';
+import { collectionLd } from '../../../../lib/seo';
+import { site } from '../../../../config/site';
+import TaxonomyLayout from '../../../../components/TaxonomyLayout.astro';
+
+export async function getStaticPaths() {
+  const articles = await getPublishedArticles();
+  const paths = [];
+  for (const category of categories) {
+    const total = totalPagesOf(articlesInCategory(articles, category.id).length, site.postsPerPage);
+    for (let page = 2; page <= total; page += 1) {
+      paths.push({ params: { category: category.id, page: String(page) } });
+    }
+  }
+  return paths;
+}
+
+const categoryId = Astro.params.category;
+const page = Number(Astro.params.page);
+if (!categoryId || !Number.isInteger(page) || page < 2) {
+  throw new Error('カテゴリのページ指定が不正です');
+}
+const category = getCategory(categoryId);
+const articles = articlesInCategory(await getPublishedArticles(), category.id);
+const listed = paginate(articles, page, site.postsPerPage);
+if (listed.page !== page) throw new Error(`${category.name} に ${page} ページ目はありません`);
+const pillar = category.pillarSlug ? articles.find((article) => article.id === category.pillarSlug) : undefined;
+const path = categoryPath(category.id);
+const crumbs = [
+  { name: 'ホーム', href: '/' },
+  { name: category.name, href: path },
+];
+---
+
+<TaxonomyLayout
+  title={category.name}
+  description={category.description}
+  crumbs={crumbs}
+  eyebrow="占術ガイド"
+  paragraphs={category.paragraphs}
+  pillar={pillar ? { href: articlePath(pillar.id), label: pillar.data.title } : null}
+  articles={listed.items}
+  page={listed.page}
+  totalPages={listed.totalPages}
+  basePath={path}
+  emptyMessage="この占術の記事は準備中です。上の解説が、テーマの入り口です。"
+  currentCategoryId={category.id}
+  jsonLd={[collectionLd(`${category.name}（${page}ページ目）`, category.description, `/category/${category.id}/page/${page}/`)]}
+/>
