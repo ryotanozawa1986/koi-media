@@ -1,4 +1,20 @@
-"""サンプル用の 1200x630 サムネイルを作る。記事本文の自動生成からは呼ばない。"""
+"""【非推奨】初期サンプル用の 1200x630 抽象サムネイルを Pillow で作る。
+
+新しい記事のサムネイルには使わない。
+今の運用は scripts/thumbnail-styles.json のスタイル D/E/F で背景を生成し、
+scripts/overlay-title.py（または compose-thumbnail.py）でタイトルを載せる。
+手順は CONTENT_GUIDE.md の「4. サムネイル」を見ること。
+"""
+
+import sys
+import warnings
+
+warnings.warn(
+    "generate-sample-images.py は非推奨です。CONTENT_GUIDE.md のサムネイル手順を使ってください。",
+    DeprecationWarning,
+    stacklevel=1,
+)
+print("警告: このスクリプトは非推奨です。新しいサムネイルは CONTENT_GUIDE.md の手順で作ってください。", file=sys.stderr)
 
 from pathlib import Path
 

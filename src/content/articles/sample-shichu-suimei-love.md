@@ -9,7 +9,7 @@ tags:
   - "命式"
   - "恋愛"
 thumbnail: /thumbnails/sample-shichu-suimei-love.webp
-thumbnailAlt: "茜色から生成りへ移る背景に、四本の細い金の縦線がある抽象的な画像"
+thumbnailAlt: "生成り色の余白に、細い金の三日月と四本の短い縦線、記事タイトルを入れた画像"
 sources:
   - title: "サンプル出典（公開時は実際の参照先に差し替える）"
     url: https://example.com/sources/shichu-suimei

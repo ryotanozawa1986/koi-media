@@ -68,7 +68,7 @@ tags:
   - "四柱推命"
   - "恋愛"
 thumbnail: /thumbnails/shichu-love-basics.webp
-thumbnailAlt: "暖色のグラデーションに、四本の細い縦線がある抽象的な画像"
+thumbnailAlt: "生成り色の余白に、細い金の三日月と四本の短い縦線、記事タイトルを入れた画像"
 sources:
   - title: "参照したページのタイトル"
     url: https://example.com/sources/shichu-suimei
@@ -95,10 +95,45 @@ faq:
 
 ## 4. サムネイル
 
-- サイズはちょうど 1200×630
-- 形式は WebP または PNG
-- パスは `public/thumbnails/<slug>.webp`（フロントマターの `thumbnail` とファイル名が一致）
-- カードと OGP の両方に使います。記事タイトルは HTML 側に出るので、画像の中に長い文字を焼き込まなくて構いません
+サイズはちょうど 1200×630、形式は WebP（または PNG）、パスは `public/thumbnails/<slug>.webp` です。フロントマターの `thumbnail` とファイル名を揃えます。カードと OGP の両方に使います。
+
+スタイルは D（生成り色の線画）、E（淡い水彩）、F（水色のフラット）の3つです。記事ごとにこの中からランダムに1つ選びます。いずれも余白の多い淡いデザインで、月や星は小さめのアクセントにします。定義は `scripts/thumbnail-styles.json` にあります。
+
+作り方:
+
+1. スタイルをランダムに選ぶ（`python scripts/compose-thumbnail.py --pick-style --category-id <カテゴリid> --print-prompt` で、そのスタイルの英語プロンプトが出ます）
+2. プロンプトどおり、文字・数字・記号のない背景だけを画像生成する（タイトルは画像モデルに描かせない）
+3. 背景を 1200×630 にし、日本語タイトルとカテゴリ名を Noto CJK で載せる
+
+```bash
+python scripts/compose-thumbnail.py \
+  --image /tmp/background.png \
+  --style D \
+  --title "四柱推命とは？恋愛傾向の見方" \
+  --category "四柱推命" \
+  --output public/thumbnails/shichu-love-basics.webp
+```
+
+`scripts/overlay-title.py` だけを直接呼ぶこともできます。タイトルは最大2行、句読点や「とは？」「で読む」の直後で折り返します。色と配置はスタイル定義に合わせ、月のある右側を避けて左の余白に置きます。
+
+### フォント
+
+自動化の実行環境に Noto CJK が必要です。Debian / Ubuntu では次で入ります。
+
+```bash
+sudo apt install fonts-noto-cjk
+```
+
+スクリプトが見に行くパス（先頭から、最初に見つかったものを使う）:
+
+- タイトル: Noto Serif CJK Bold（例 `/usr/share/fonts/opentype/noto/NotoSerifCJK-Bold.ttc`）
+- カテゴリ: Noto Sans CJK Regular（例 `/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc`）
+
+TTC の場合は JP の面を自動で選びます。フォントが無いと合成は失敗します。Netlify のビルドでは画像を作り直さないので、フォントは記事を書く側の環境にだけあれば足ります。
+
+サイト全体のデフォルト OGP（`public/og-default.webp`）も、同じ淡いスタイルでサイト名を合成します。
+
+古い `scripts/generate-sample-images.py` は、初期サンプル用の Pillow 抽象画像を出すだけで、今の運用では使いません（非推奨）。
 
 ## 5. 非公開にする
 

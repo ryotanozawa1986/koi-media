@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "notes": "記事ごとに styles から 1 つをランダムに選ぶ。背景は GenerateImage で文字なしに作り、scripts/overlay-title.py でタイトルを載せる。moon は右（または右上）に置き、タイトルは左の余白へ合成する。",
+  "styles": {
+    "D": {
+      "id": "D",
+      "name": "生成り色の線画",
+      "prompt": "A very light, minimal 16:9 editorial illustration for a women's lifestyle media thumbnail about love and fortune-telling. Vast off-white cream paper background with abundant empty negative space on the left and center for later typography. In the upper-right area only: a small delicate thin gold line-art crescent moon with simple single-weight strokes, not filled, plus a few tiny gold line-art stars and two or three small gold dots. {motif} An extremely faint thin gold rectangular frame inset near the edges. Calm, clean, airy, flat vector line illustration, generous whitespace, no people, no heavy ornament, no galaxy, no clouds, no textures that darken the page. Pale cream and soft gold only. Absolutely no text, no letters, no typography, no numbers, no watermarks, no signatures, no logos, and no Chinese, Japanese, or Latin characters anywhere.",
+      "overlay": {
+        "color": "#3a2f28",
+        "accent": "#b8955a",
+        "align": "left",
+        "valign": "center",
+        "margin_x": 100,
+        "max_width": 680
+      }
+    },
+    "E": {
+      "id": "E",
+      "name": "淡い水彩",
+      "prompt": "A very pale, airy 16:9 watercolor illustration for a women's lifestyle media thumbnail about love and fortune-telling. Soft barely-there gradient sky from whisper pink to pale lavender to almost white, high-key and washed out, with lots of open empty space on the left half for later typography. A small soft translucent watercolor full moon placed on the right side, not large, not intensely glowing. A few tiny faint sparkles. {motif} Dreamy but quiet, like morning mist, no heavy nebula, no saturated purple, no dark clouds, no tarot cards, no people, no ornate gold frames. Clean, calm, feminine, plenty of negative space. Absolutely no text, no letters, no typography, no numbers, no watermarks, no signatures, no logos, and no Chinese, Japanese, or Latin characters anywhere.",
+      "overlay": {
+        "color": "#3a2d44",
+        "accent": "#9a6f80",
+        "align": "left",
+        "valign": "center",
+        "margin_x": 96,
+        "max_width": 620
+      }
+    },
+    "F": {
+      "id": "F",
+      "name": "水色のフラット",
+      "prompt": "A clean flat 16:9 vector illustration for a women's lifestyle media thumbnail about love and fortune-telling. Very light sky-blue fading to almost white in the center and left, airy and simple, lots of empty space on the left half for later typography. Motifs kept small and sparse on the right and upper-right only: a small pale-yellow crescent moon, a handful of tiny simple four-point or five-point stars, and one subtle small outline heart in soft blush pink. {motif} Flat design, simple geometric shapes, thin lines, no dark gradients, no realistic shading, no ornate filigree, no people, no buildings, no cards. Calm, cute but restrained, like a contemporary Japanese women's web magazine header. Absolutely no text, no letters, no typography, no numbers, no watermarks, no signatures, no logos, and no Chinese, Japanese, or Latin characters anywhere.",
+      "overlay": {
+        "color": "#2c3d55",
+        "accent": "#7a8eaa",
+        "align": "left",
+        "valign": "center",
+        "margin_x": 100,
+        "max_width": 680
+      }
+    }
+  },
+  "motifs": {
+    "shichu-suimei": "Near the moon, four very short, thin gold or pale vertical lines grouped loosely as a quiet hint of four pillars, small and subtle, not dominating the composition.",
+    "rokusei-senjutsu": "Near the moon, six tiny simple stars arranged in a loose gentle arc, very small and subtle.",
+    "kyusei-kigaku": "Near the moon, nine tiny faint dots in a loose three-by-three cluster, very small and subtle, not a hard diagram.",
+    "seiza": "Near the moon, a few tiny constellation dots connected by the faintest lines, small and subtle.",
+    "tarot": "Near the moon, one very small simple outline of a blank card with no writing on it.",
+    "suhijutsu": "Near the moon, a tiny simple ring of small dots, with no numerals anywhere.",
+    "dobutsu-uranai": "Near the moon, a tiny simple silhouette of a small bird or cat, very small and faint.",
+    "ketsuekigata": "Near the moon, two tiny overlapping outline circles, with no letters anywhere.",
+    "default": "Keep only the moon and a few tiny stars as small accents, nothing else."
+  },
+  "ogDefault": {
+    "style": "D",
+    "category": "koi-media",
+    "title": "恋愛と占いのメディア",
+    "max_width": 800,
+    "max_title_size": 68
+  }
+}
