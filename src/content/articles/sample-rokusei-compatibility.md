@@ -8,7 +8,7 @@ tags:
   - "相性"
   - "恋愛"
 thumbnail: /thumbnails/sample-rokusei-compatibility.webp
-thumbnailAlt: "藍から薄紫へ移る背景に、弧を描く六つの小さな光がある抽象的な画像"
+thumbnailAlt: "水色の余白に、右の小さな三日月と星、ハート、記事タイトルを入れた画像"
 sources:
   - title: "サンプル出典（公開時は実際の参照先に差し替える）"
     url: https://example.com/sources/rokusei-senjutsu

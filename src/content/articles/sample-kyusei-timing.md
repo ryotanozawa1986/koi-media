@@ -8,7 +8,7 @@ tags:
   - "タイミング"
   - "恋愛"
 thumbnail: /thumbnails/sample-kyusei-timing.webp
-thumbnailAlt: "霧がかった生成り色の背景に、三行三列の九点がある抽象的な画像"
+thumbnailAlt: "淡いピンクとラベンダーの水彩の空に、右の満月と記事タイトルを入れた画像"
 sources:
   - title: "サンプル出典（公開時は実際の参照先に差し替える）"
     url: https://example.com/sources/kyusei-kigaku
