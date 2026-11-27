@@ -13,4 +13,6 @@ export const site = {
   postsPerPage: 6,
   editorName: 'koi-media編集部',
   defaultOgImage: '/og-default.webp',
+  /** GA4 Measurement ID。本番ビルドの共通レイアウトだけが読み込む。 */
+  gaMeasurementId: 'G-3N657LSB8J',
 } as const;
