@@ -42,6 +42,10 @@ const pageTitle = title === site.name ? `${site.name}｜${site.tagline}` : `${ti
 const canonical = absoluteUrl(Astro.url.pathname);
 const imageUrl = absoluteUrl(image);
 const modified = updatedAt ?? publishedAt;
+const gtagSnippet = `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', ${JSON.stringify(site.gaMeasurementId)});`;
 ---
 
 <!doctype html>
@@ -49,6 +53,18 @@ const modified = updatedAt ?? publishedAt;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {
+      import.meta.env.PROD && (
+        <>
+          <script
+            is:inline
+            async
+            src={`https://www.googletagmanager.com/gtag/js?id=${site.gaMeasurementId}`}
+          ></script>
+          <script is:inline set:html={gtagSnippet}></script>
+        </>
+      )
+    }
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
