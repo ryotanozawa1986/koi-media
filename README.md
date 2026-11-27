@@ -23,4 +23,4 @@ Netlify のビルドコマンドは `npm run build`、公開ディレクトリ�
 | `src/data/result-types.ts` | 六星・九星のタイプ解説（`published: true` でページ化） |
 | `CONTENT_GUIDE.md` | 記事を追加する手順、フロントマター、非公開の方法 |
 
-公開URLの初期値は `https://koi-media.example.com` です。本番前に `src/config/site.ts` の `url` を変えてください。サイト名の初期値は `koi-media` です。
+公開URLは `https://koi-love.net` です。`src/config/site.ts` の `url` が canonical、OGP、サイトマップ、RSS、`robots.txt` の基準になります。サイト名は `koi-media` です。
